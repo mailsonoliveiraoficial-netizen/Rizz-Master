@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "433045342775",
+    "project_id": "rizz-master-projec",
+    "storage_bucket": "rizz-master-projec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:433045342775:android:fd06c996e47438c8f0cdb2",
+        "android_client_info": {
+          "package_name": "com.example.wingman_ai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-vd_utdKCT3jG96YEA2l-mGHHr_UIt9A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/themes/app_theme.dart';
+import '../../credits/credits_page.dart'; // Importação oficial da nova tela de créditos
 
 class RizzCreditCard extends StatelessWidget {
   const RizzCreditCard({super.key});
@@ -49,7 +50,13 @@ class RizzCreditCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
             ),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                // Navegação inserida seguindo as diretrizes da Sprint 6.1
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CreditsPage()),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
@@ -58,7 +65,7 @@ class RizzCreditCard extends StatelessWidget {
               ),
               child: const Row(
                 children: [
-                  Text("Comprar créditos", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                  Text("Comprar", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
                   SizedBox(width: 4),
                   Icon(Icons.arrow_forward_ios, color: Colors.white, size: 12),
                 ],

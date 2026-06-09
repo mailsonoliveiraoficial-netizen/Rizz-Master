@@ -11,10 +11,13 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   
-  # Firebase Core e Serviços requisitados
+  # Firebase
   firebase_core: ^3.2.0
   firebase_auth: ^5.1.2
   cloud_firestore: ^5.4.3
+
+  # Estado leve e reativo para a camada de Presentation
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:

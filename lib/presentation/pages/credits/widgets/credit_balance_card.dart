@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/themes/app_theme.dart';
+import '../../../providers/credits_provider.dart';
 
 class CreditBalanceCard extends StatelessWidget {
   const CreditBalanceCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final creditsProvider = context.watch<CreditsProvider>();
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
@@ -21,21 +25,21 @@ class CreditBalanceCard extends StatelessWidget {
             style: TextStyle(color: AppTheme.textGrey, fontSize: 14),
           ),
           const SizedBox(height: 8),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
               Text(
-                "25",
-                style: TextStyle(
+                "${creditsProvider.currentCredits}", // Dinâmico
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 48,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(width: 8),
-              Text(
+              const SizedBox(width: 8),
+              const Text(
                 "Créditos",
                 style: TextStyle(color: AppTheme.accentPink, fontSize: 18),
               ),
@@ -44,41 +48,42 @@ class CreditBalanceCard extends StatelessWidget {
           const SizedBox(height: 24),
           Divider(color: Colors.white.withValues(alpha: 0.1)),
           const SizedBox(height: 16),
-          const _BuildPlanInfo(), // Nome corrigido para PascalCase com const
+          const _BuildPlanInfo(),
         ],
       ),
     );
   }
 }
 
-// Classe renomeada e otimizada internamente com const para o linter aprovar
 class _BuildPlanInfo extends StatelessWidget {
   const _BuildPlanInfo();
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    final creditsProvider = context.watch<CreditsProvider>();
+
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Plano Atual", style: TextStyle(color: AppTheme.textGrey, fontSize: 12)),
-            SizedBox(height: 4),
+            const Text("Plano Atual", style: TextStyle(color: AppTheme.textGrey, fontSize: 12)),
+            const SizedBox(height: 4),
             Text(
-              "Premium (100 cr/mês)",
-              style: TextStyle(color: AppTheme.primaryPurple, fontWeight: FontWeight.bold),
+              creditsProvider.currentPlan, // Dinâmico
+              style: const TextStyle(color: AppTheme.primaryPurple, fontWeight: FontWeight.bold),
             ),
           ],
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text("Renovação", style: TextStyle(color: AppTheme.textGrey, fontSize: 12)),
-            SizedBox(height: 4),
+            const Text("Renovação", style: TextStyle(color: AppTheme.textGrey, fontSize: 12)),
+            const SizedBox(height: 4),
             Text(
-              "15 Jun 2026",
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+              creditsProvider.renewalDate, // Dinâmico
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
           ],
         ),

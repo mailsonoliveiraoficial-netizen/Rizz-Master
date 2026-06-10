@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/themes/app_theme.dart';
-import '../../credits/credits_page.dart'; // Importação oficial da nova tela de créditos
+import '../../credits/credits_page.dart';
+import '../../../providers/credits_provider.dart';
 
 class RizzCreditCard extends StatelessWidget {
   const RizzCreditCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final creditsProvider = context.watch<CreditsProvider>();
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -32,10 +36,13 @@ class RizzCreditCard extends StatelessWidget {
                 const Text("Seus créditos", style: TextStyle(color: Colors.grey, fontSize: 13)),
                 const SizedBox(height: 2),
                 RichText(
-                  text: const TextSpan(
+                  text: TextSpan(
                     children: [
-                      TextSpan(text: '25 ', style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
-                      TextSpan(text: 'créditos', style: TextStyle(color: AppTheme.primaryPurple, fontSize: 14)),
+                      TextSpan(
+                        text: '${creditsProvider.currentCredits} ', // Dinâmico
+                        style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
+                      ),
+                      const TextSpan(text: 'créditos', style: TextStyle(color: AppTheme.primaryPurple, fontSize: 14)),
                     ],
                   ),
                 ),
@@ -51,7 +58,6 @@ class RizzCreditCard extends StatelessWidget {
             ),
             child: ElevatedButton(
               onPressed: () {
-                // Navegação inserida seguindo as diretrizes da Sprint 6.1
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const CreditsPage()),

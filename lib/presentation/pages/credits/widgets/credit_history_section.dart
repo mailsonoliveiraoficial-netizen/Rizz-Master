@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/themes/app_theme.dart';
+import '../../../providers/credits_provider.dart';
 
 class CreditHistorySection extends StatelessWidget {
   const CreditHistorySection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Escuta as alterações na lista de histórico do Provider em tempo real
+    final creditsProvider = context.watch<CreditsProvider>();
+    final historyList = creditsProvider.history;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -14,9 +20,22 @@ class CreditHistorySection extends StatelessWidget {
           style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
-        _buildHistoryItem("Renovação Premium", "+100", "15 Mai", true),
-        _buildHistoryItem("Análise de Texto", "-1", "Hoje, 14:32", false),
-        _buildHistoryItem("Análise de Print", "-3", "Ontem, 21:15", false),
+        if (historyList.isEmpty)
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            child: Text(
+              "Nenhuma movimentação encontrada.",
+              style: TextStyle(color: AppTheme.textGrey, fontSize: 14),
+            ),
+          )
+        else
+          // Mapeia a lista do provider diretamente para widgets
+          ...historyList.map((transaction) => _buildHistoryItem(
+                transaction.title,
+                transaction.value,
+                transaction.date,
+                transaction.isPositive,
+              )),
       ],
     );
   }

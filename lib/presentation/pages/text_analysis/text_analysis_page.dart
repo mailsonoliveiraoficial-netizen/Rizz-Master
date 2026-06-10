@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/themes/app_theme.dart';
+import '../../../../data/services/ai_service.dart'; // Importação do Service
 import '../../providers/credits_provider.dart';
 import 'widgets/tone_selector.dart';
 import 'widgets/rizz_results_view.dart';
@@ -14,10 +15,13 @@ class TextAnalysisPage extends StatefulWidget {
 
 class _TextAnalysisPageState extends State<TextAnalysisPage> {
   final TextEditingController _textController = TextEditingController();
+  final AiService _aiService = AiService(); // Instanciação direta e simples
+  
   int _charCount = 0;
   String _selectedTone = "Natural";
   bool _isLoading = false;
   bool _showResults = false;
+  List<String> _generatedResponses = []; // Guarda os retornos da IA
 
   @override
   void dispose() {
@@ -27,36 +31,57 @@ class _TextAnalysisPageState extends State<TextAnalysisPage> {
 
   void _handleGenerateResponses() async {
     final creditsProvider = context.read<CreditsProvider>();
-
-    // Validação local e consumo de 1 crédito
     final bool hasConsumed = creditsProvider.consumeTextAnalysis();
 
     if (!hasConsumed) {
-      // Alerta customizado caso o usuário não tenha saldo suficiente
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          backgroundColor: AppTheme.cardColor,
-          title: const Text("Saldo Insuficiente", style: TextStyle(color: Colors.white)),
-          content: const Text("Você precisa de pelo menos 1 crédito para gerar respostas por texto.", style: TextStyle(color: AppTheme.textGrey)),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Voltar", style: TextStyle(color: AppTheme.textGrey)),
-            ),
-          ],
-        ),
-      );
+      _showInsufficientCreditsDialog();
       return;
     }
 
-    // Se possui saldo, inicia o fluxo de loading e exibição simulado do MVP
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 2)); // Simula o tempo de resposta da IA
-    setState(() {
-      _isLoading = false;
-      _showResults = true;
-    });
+    
+    try {
+      // Executa a chamada real da Cloud Function para a OpenAI
+      final results = await _aiService.generateTextResponses(
+        text: _textController.text,
+        tone: _selectedTone,
+      );
+
+      setState(() {
+        _generatedResponses = results;
+        _showResults = true;
+      });
+    } catch (e) {
+      _showErrorSnackBar(e.toString());
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  void _showInsufficientCreditsDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppTheme.cardColor,
+        title: const Text("Saldo Insuficiente", style: TextStyle(color: Colors.white)),
+        content: const Text("Você precisa de pelo menos 1 crédito para gerar respostas.", style: TextStyle(color: AppTheme.textGrey)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Voltar", style: TextStyle(color: AppTheme.textGrey)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Erro: $message"),
+        backgroundColor: Colors.redAccent,
+      ),
+    );
   }
 
   @override
@@ -81,10 +106,12 @@ class _TextAnalysisPageState extends State<TextAnalysisPage> {
               : _showResults
                   ? RizzResultsView(
                       tone: _selectedTone,
+                      responses: _generatedResponses,
                       onReset: () => setState(() {
                         _showResults = false;
                         _textController.clear();
                         _charCount = 0;
+                        _generatedResponses = [];
                       }),
                     )
                   : _buildFormState(),

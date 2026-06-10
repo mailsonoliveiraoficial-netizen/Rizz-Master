@@ -4,19 +4,15 @@ import '../../../../core/themes/app_theme.dart';
 
 class RizzResultsView extends StatelessWidget {
   final String tone;
+  final List<String> responses; // Recebe a lista real da IA
   final VoidCallback onReset;
 
   const RizzResultsView({
     super.key,
     required this.tone,
+    required this.responses,
     required this.onReset,
   });
-
-  List<String> get _mockedResponses => [
-        "Acho que o tempo é relativo, mas um café com você dura exatamente o tempo de eu querer marcar o próximo.",
-        "Sei como é a correria! Vamos fazer assim: me dá 15 minutos da sua semana e eu te provo que vale a pena.",
-        "Dizem que as melhores coisas demoram para acontecer. Vou encarar isso como um bom sinal para o nosso encontro.",
-      ];
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +44,10 @@ class RizzResultsView extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 24),
-        ..._mockedResponses.map((response) => _buildResultCard(context, response)),
+        if (responses.isEmpty)
+          const Text("Nenhuma resposta gerada.", style: TextStyle(color: Colors.white))
+        else
+          ...responses.map((response) => _buildResultCard(context, response)),
       ],
     );
   }
@@ -81,7 +80,6 @@ class RizzResultsView extends StatelessWidget {
                 ),
               );
             },
-            // CORREÇÃO AQUI: O const foi movido para o início do widget Row
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [

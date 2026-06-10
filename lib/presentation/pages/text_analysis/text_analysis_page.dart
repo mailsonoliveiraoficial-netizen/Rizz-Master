@@ -31,7 +31,15 @@ class _TextAnalysisPageState extends State<TextAnalysisPage> {
 
   void _handleGenerateResponses() async {
     final creditsProvider = context.read<CreditsProvider>();
-    final bool hasConsumed = creditsProvider.consumeTextAnalysis();
+    
+    // 🚀 SHIFT DE LÓGICA AQUI: Criamos um rótulo inteligente para o histórico usando o tom escolhido
+    final String historyLabel = "Tom $_selectedTone";
+
+    // Chama o novo método unificado que consome 1 crédito e injeta no histórico simultaneamente
+    final bool hasConsumed = creditsProvider.registerRizzGeneration(
+      personName: historyLabel,
+      isPrint: false, // Define como falso pois estamos na tela de input de texto
+    );
 
     if (!hasConsumed) {
       _showInsufficientCreditsDialog();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/themes/app_theme.dart';
+import '../../text_analysis/text_analysis_page.dart'; // Importação oficial adicionada
 
 class RizzBottomNav extends StatelessWidget {
   final int currentIndex;
@@ -24,7 +25,7 @@ class RizzBottomNav extends StatelessWidget {
         children: [
           _buildItem(Icons.home, "Início", 0),
           _buildItem(Icons.history, "Histórico", 1),
-          _buildCenterItem(context), // Passando o contexto para abrir o BottomSheet
+          _buildCenterItem(context),
           _buildItem(Icons.bolt, "Créditos", 2),
           _buildItem(Icons.person_outline, "Perfil", 3),
         ],
@@ -61,7 +62,7 @@ class RizzBottomNav extends StatelessWidget {
 
   Widget _buildCenterItem(BuildContext context) {
     return InkWell(
-      onTap: () => _showNewAnalysisSheet(context), // Abre a janela de nova ação da IA
+      onTap: () => _showNewAnalysisSheet(context),
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       child: Container(
@@ -80,7 +81,6 @@ class RizzBottomNav extends StatelessWidget {
     );
   }
 
-  // Janela flutuante de criação premium do Rizz Master
   void _showNewAnalysisSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -119,8 +119,11 @@ class RizzBottomNav extends StatelessWidget {
                 title: "Análise por Texto",
                 subtitle: "Cole a conversa ou fale a situação (Custo: 1 cr)",
                 onTap: () {
-                  Navigator.pop(context);
-                  // Rota para Etapa 7 futuramente
+                  Navigator.pop(context); // Fecha o BottomSheet de forma limpa
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const TextAnalysisPage()), // Rota direta para a UI construída
+                  );
                 },
               ),
               const SizedBox(height: 12),
@@ -131,7 +134,7 @@ class RizzBottomNav extends StatelessWidget {
                 subtitle: "Suba o print da conversa do app (Custo: 3 cr)",
                 onTap: () {
                   Navigator.pop(context);
-                  // Rota para Etapa 9 futuramente
+                  // Bloqueado temporariamente — Sem antecipar a Etapa 9
                 },
               ),
               const SizedBox(height: 16),
